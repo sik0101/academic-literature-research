@@ -241,13 +241,8 @@ academic-literature-research/
 
 ## Installation
 
-### Option 1: Claude Code Plugin Marketplace
-```bash
-/plugin marketplace add sik0101/academic-literature-research
-/plugin install academic-literature-research
-```
+### Manual Installation (Current Method)
 
-### Option 2: Manual Installation
 1. Clone the repository:
 ```bash
 git clone https://github.com/sik0101/academic-literature-research.git
@@ -255,10 +250,17 @@ git clone https://github.com/sik0101/academic-literature-research.git
 
 2. Copy to Claude Code skills directory:
 ```bash
+# On macOS/Linux
 cp -r academic-literature-research ~/.claude/skills/
+
+# On Windows
+xcopy academic-literature-research %USERPROFILE%\.claude\skills\ /E /I
 ```
 
 3. Restart Claude Code
+
+### Future: Claude Code Plugin Marketplace
+This skill will be published to the Claude Code Plugin Marketplace in a future release. Once published, you'll be able to install it directly from the marketplace.
 
 ## Usage Examples
 

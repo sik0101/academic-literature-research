@@ -160,7 +160,7 @@ All reports follow a consistent structure:
 ### Single Paper Analysis
 
 ```
-深度阅读这篇论文：[论文标题或链接]
+Deep reading of this paper: [Title or link]
 ```
 
 The skill will:
@@ -172,7 +172,7 @@ The skill will:
 ### Literature Survey
 
 ```
-调研关于[研究方向]的最新文献
+Research the latest literature on [research direction]
 ```
 
 The skill will:
@@ -184,7 +184,7 @@ The skill will:
 ### Quick Brief
 
 ```
-快速总结这篇论文的核心内容
+Quickly summarize the core content of this paper
 ```
 
 The skill will:
@@ -243,14 +243,14 @@ academic-literature-research/
 
 ### Option 1: Claude Code Plugin Marketplace
 ```bash
-/plugin marketplace add [username]/academic-literature-research
+/plugin marketplace add sik0101/academic-literature-research
 /plugin install academic-literature-research
 ```
 
 ### Option 2: Manual Installation
 1. Clone the repository:
 ```bash
-git clone https://github.com/[username]/academic-literature-research.git
+git clone https://github.com/sik0101/academic-literature-research.git
 ```
 
 2. Copy to Claude Code skills directory:
@@ -266,7 +266,7 @@ cp -r academic-literature-research ~/.claude/skills/
 
 **Input**:
 ```
-深度阅读这篇论文：Attention Is All You Need (Vaswani et al., 2017)
+Deep reading of the paper: "Attention Is All You Need" (Vaswani et al., 2017)
 ```
 
 **Output**: Comprehensive analysis including:
@@ -282,7 +282,7 @@ cp -r academic-literature-research ~/.claude/skills/
 
 **Input**:
 ```
-调研关于图神经网络在推荐系统中的应用的最新文献
+Survey the latest literature on the application of graph neural networks in recommendation systems
 ```
 
 **Output**: Survey report including:
@@ -296,7 +296,7 @@ cp -r academic-literature-research ~/.claude/skills/
 
 **Input**:
 ```
-快速总结BERT论文的核心内容
+Quickly summarize the core content of the BERT paper
 ```
 
 **Output**: Brief summary including:

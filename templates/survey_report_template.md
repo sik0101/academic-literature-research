@@ -1,7 +1,7 @@
 ---
 template_type: literature-survey
-version: "1.0"
-description: "Comprehensive literature survey of a research area (5-10 papers)"
+version: "2.0"
+description: "Research-question-centric literature survey (5-10 papers). Organized around core research problems, technical routes, and evolution analysis — not paper summaries."
 language: English
 ---
 
@@ -9,177 +9,207 @@ language: English
 
 **Survey Scope**: [Geographic/Temporal/Disciplinary scope]  
 **Papers Analyzed**: [Number] papers  
-**Time Period**: [Start year] - [End year]  
+**Time Period**: [Start year] – [End year]  
 **Survey Date**: [Date]  
-**Analyst**: [Name/AI-Assisted]
+**Analysis Method**: AI-assisted (WebSearch + WebFetch + Semantic Scholar API)
 
 ---
 
 ## Executive Summary
 
-This literature survey examines [number] peer-reviewed papers on [research area] published between [year] and [year]. The survey reveals [major finding 1], [major finding 2], and [major finding 3].
+[Paragraph 1: What field is surveyed, time range, number of papers, and the most important structural finding about the field — e.g., "The field has converged on X paradigm but remains divided on Y".]
 
-The research landscape is characterized by [characteristic 1], [characteristic 2], and [characteristic 3]. Key research trends include [trend 1], [trend 2], and [trend 3].
+[Paragraph 2: The 2–3 most important technical findings — specific claims backed by evidence, not generic observations.]
 
-This survey identifies [X] major research gaps and recommends [Y] priority directions for future research.
-
----
-
-## 1. Introduction & Scope
-
-### 1.1 Research Area Definition
-
-Define the research area clearly:
-- **Primary focus**: [Definition]
-- **Related areas**: [Related topics]
-- **Excluded areas**: [Out of scope]
-
-### 1.2 Survey Rationale
-
-Why is this survey needed?
-- **Significance**: [Why this area matters]
-- **Current state**: [Current understanding]
-- **Gaps**: [What is missing]
-
-### 1.3 Survey Methodology
-
-**Search Strategy**:
-- **Databases**: [Databases searched]
-- **Keywords**: [Search terms used]
-- **Time period**: [Years covered]
-- **Inclusion criteria**: [What was included]
-- **Exclusion criteria**: [What was excluded]
-
-**Results**:
-- **Initial hits**: [Number]
-- **After screening**: [Number]
-- **Final included**: [Number]
+[Paragraph 3: Major gaps identified and the most promising future directions, grounded in the analysis below.]
 
 ---
 
-## 2. Key Papers Analysis
+## 1. Research Landscape
+
+### 1.1 Core Research Problems
+
+The field of [research area] is primarily organized around [N] core problems:
+
+1. **[Problem 1]** — [one-line description]
+2. **[Problem 2]** — [one-line description]
+3. **[Problem 3]** — [one-line description]
+4. **[Problem 4]** — [one-line description]
+*(Add or remove problems to match the field)*
+
+### 1.2 Technical Routes
+
+---
+
+#### Route 1: [Route Name]
+
+**Research Question**: [Exactly what problem this route addresses]
+
+**Motivation**: [Why this approach was developed; what prior routes failed to solve]
+
+**Main Approaches**:
+- [Approach category A] — [brief description]
+- [Approach category B] — [brief description]
+- [Approach category C] — [brief description]
+
+**Representative Papers**:
+- [Author et al., Year] "[Title]" — [Venue] — [Link]
+- [Author et al., Year] "[Title]" — [Venue] — [Link]
+- [Author et al., Year] "[Title]" — [Venue] — [Link]
+
+**Strengths**: [What this route successfully addresses]
+
+**Limitations**: [What this route still fails to solve]
+
+**Relationship to Other Directions**: [Complementary / competing / hierarchical relationship with other routes]
+
+---
+
+#### Route 2: [Route Name]
+
+**Research Question**: [Exactly what problem this route addresses]
+
+**Motivation**: [Why this approach was developed; what prior routes failed to solve]
+
+**Main Approaches**:
+- [Approach category A] — [brief description]
+- [Approach category B] — [brief description]
+
+**Representative Papers**:
+- [Author et al., Year] "[Title]" — [Venue] — [Link]
+- [Author et al., Year] "[Title]" — [Venue] — [Link]
+
+**Strengths**: [What this route successfully addresses]
+
+**Limitations**: [What this route still fails to solve]
+
+**Relationship to Other Directions**: [Relationship with other routes]
+
+---
+
+#### Route 3: [Route Name]
+
+[Repeat Route structure above]
+
+---
+
+*[Add Route 4 … Route N as needed to cover all major technical directions in the field]*
+
+---
+
+## 2. Representative Papers
+
+*[Apply the full 10-point framework to the 5–8 most important papers. Other papers appear in the Research Landscape above with briefer mentions.]*
+
+---
 
 ### PAPER 1: [Paper Title]
 
 **Authors**: [Author names]  
 **Year**: [Publication year]  
 **Venue**: [Journal/Conference name]  
+**Paper Type**: [Method / Benchmark / Dataset / Analysis / Survey]
 
 #### Paper Identifiers & Links
 
-**Identifiers**:
-- **DOI**: [DOI link]
-- **arXiv ID**: [arXiv link]
-- **Semantic Scholar ID**: [S2 link]
+- **arXiv**: [https://arxiv.org/abs/XXXX.XXXXX](https://arxiv.org/abs/XXXX.XXXXX)
+- **DOI**: [https://doi.org/10.XXXXX](https://doi.org/10.XXXXX)
+- **Semantic Scholar**: [Link]
 
-**Access Links**:
-- 🔗 [View on arXiv]
-- 🔗 [View on DOI]
-- 🔗 [View on Semantic Scholar]
-
-**Verification Status**:
-- ✅ Verified via Semantic Scholar API
-- ✅ Citation Count: [Number]
-- ✅ Verification Method: [Method and similarity score]
+**Citation Count**: [Number] | **Content Level**: [full_text / abstract_only]
 
 ---
 
-#### 1. Research Motivation
+#### 1. Research Problem
 
-**Background**: [Historical context and why this research matters]
-
-**Core Research Question**: [Main research question being addressed]
-
-**Research Gaps**: 
-- [Gap 1]
-- [Gap 2]
-- [Gap 3]
+[1–2 sentences: what specific problem this paper addresses, framed as a research question]
 
 ---
 
-#### 2. Problem Formulation
+#### 2. Core Idea
 
-**Problem Statement**: [Precise problem statement]
-
-**Specific Challenges**:
-- [Challenge 1]
-- [Challenge 2]
-- [Challenge 3]
-
-**Evaluation Metrics**:
-- [Metric 1]
-- [Metric 2]
-- [Metric 3]
+[The central conceptual insight — not just "we propose X" but WHY X was the right approach to the problem. What is the key idea that enables the approach?]
 
 ---
 
-#### 3. Solution Approach
+#### 3. Method Overview
 
-**Core Idea**: [Main idea or approach]
+**Core approach**: [One-paragraph description of the technical approach]
 
-**Technical Components**:
-
-1. **Component 1**
-   - [Description]
-   - [Key details]
-
-2. **Component 2**
-   - [Description]
-   - [Key details]
-
-3. **Component 3**
-   - [Description]
-   - [Key details]
+**Key components**:
+1. **[Component 1]** — [description]
+2. **[Component 2]** — [description]
+3. **[Component 3]** — [description]
 
 **Architecture**:
 ```
-[ASCII diagram or flowchart showing the approach]
+[ASCII diagram or flowchart showing the approach — optional but recommended]
 ```
 
 ---
 
-#### 4. Innovation Points
+#### 4. Innovation
 
-1. **Innovation 1**
-   - [Description of what is novel]
-   - [Why it matters]
+1. **[Innovation 1]**
+   - Novel contribution: [what is new compared to prior work]
+   - Why it matters: [what problem this novelty solves]
 
-2. **Innovation 2**
-   - [Description of what is novel]
-   - [Why it matters]
+2. **[Innovation 2]**
+   - Novel contribution: [what is new compared to prior work]
+   - Why it matters: [what problem this novelty solves]
 
-3. **Innovation 3**
-   - [Description of what is novel]
-   - [Why it matters]
+3. **[Innovation 3]** *(if applicable)*
+   - Novel contribution: [what is new]
+   - Why it matters: [impact]
 
 ---
 
-#### 5. Experimental Results
+#### 5. Why It Works
+
+*[This section analyzes design rationale — do NOT merely list modules. Explain the insight.]*
+
+**Key bottleneck resolved**: [What specific failure mode or limitation of prior work does this design overcome?]
+
+**Design insight**: [Why does this particular design choice work? What principle makes it effective?]
+
+**Comparison with predecessors**: [Concretely: previous method did X which caused Y; this paper does Z instead, which resolves Y because...]
+
+---
+
+#### 6. Experimental Evidence
 
 **Datasets/Benchmarks**:
-- [Dataset 1]: [Description]
-- [Dataset 2]: [Description]
+- [Dataset 1]: [brief description]
+- [Dataset 2]: [brief description]
 
 **Results Comparison**:
 
-| Model | Metric 1 | Metric 2 | Metric 3 |
-|-------|----------|----------|----------|
+| Model | [Metric 1] | [Metric 2] | [Metric 3] |
+|-------|-----------|-----------|-----------|
 | [Baseline 1] | [Value] | [Value] | [Value] |
 | [Baseline 2] | [Value] | [Value] | [Value] |
 | **[This Paper]** | **[Value]** | **[Value]** | **[Value]** |
 
 **Key Findings**:
-- [Finding 1]
-- [Finding 2]
-- [Finding 3]
+- [Finding 1 — with specific numbers]
+- [Finding 2 — with specific numbers]
 
-**Ablation Studies**:
-- [Study 1]: [Result]
-- [Study 2]: [Result]
+**Evidence Quality Assessment**:
+- Ablation study: [adequate / limited / none]
+- Baseline comparison: [fair / potentially cherry-picked / limited]
+- Reproducibility: [code available / partial / none]
 
 ---
 
-#### 6. Limitations
+#### 7. Strengths
+
+- [Strength 1]
+- [Strength 2]
+- [Strength 3]
+
+---
+
+#### 8. Limitations
 
 **Method Level**:
 - [Limitation 1]
@@ -189,33 +219,30 @@ Why is this survey needed?
 - [Limitation 1]
 - [Limitation 2]
 
-**Theoretical Level**:
-- [Limitation 1]
-- [Limitation 2]
-
 **Generalization Challenges**:
 - [Challenge 1]
-- [Challenge 2]
 
 ---
 
-#### 7. Research Implications
+#### 9. Position in the Field
 
-**Implications for the Field**:
-- [Implication 1]
-- [Implication 2]
+**Technical route**: [Which route from Section 1.2 this paper belongs to]
 
-**Potential Improvements**:
-- [Improvement 1]
-- [Improvement 2]
+**Builds on**: [Specific prior papers this work directly extends — name them]
 
-**Transferability to Other Problems**:
-- [Application 1]
-- [Application 2]
+**Influenced**: [Subsequent papers that cite or build on this work — if known]
 
-**Connection to Your Research** / **Significance for the Research Field**:
-- [How this paper advances the field / relates to your work]
-- [Potential applications]
+**Classification**: [Pioneering Work / Refinement Work / Turning-Point Work / Extension Work]
+
+**Why this classification**: [One sentence justifying the classification]
+
+---
+
+#### 10. Research Insights
+
+- [Insight 1 — what this paper reveals about the field or future directions]
+- [Insight 2]
+- [Insight 3]
 
 ---
 
@@ -224,406 +251,326 @@ Why is this survey needed?
 **Authors**: [Author names]  
 **Year**: [Publication year]  
 **Venue**: [Journal/Conference name]  
+**Paper Type**: [Method / Benchmark / Dataset / Analysis / Survey]
 
 #### Paper Identifiers & Links
 
-**Identifiers**:
-- **DOI**: [DOI link]
-- **arXiv ID**: [arXiv link]
-- **Semantic Scholar ID**: [S2 link]
+- **arXiv**: [Link]
+- **DOI**: [Link]
 
-**Access Links**:
-- 🔗 [View on arXiv]
-- 🔗 [View on Semantic Scholar]
-
-**Verification Status**:
-- ✅ Citation Count: [Number]
-- ✅ Content Level: [full_text / abstract_only / metadata_only]
+**Citation Count**: [Number] | **Content Level**: [full_text / abstract_only]
 
 ---
 
-#### 1. Research Motivation
+#### 1. Research Problem
 
-**Background**: [Historical context and why this research matters]
-
-**Core Research Question**: [Main research question being addressed]
-
-**Research Gaps**: 
-- [Gap 1]
-- [Gap 2]
-- [Gap 3]
+[Problem statement]
 
 ---
 
-#### 2. Problem Formulation
+#### 2. Core Idea
 
-**Problem Statement**: [Precise problem statement]
-
-**Specific Challenges**:
-- [Challenge 1]
-- [Challenge 2]
-- [Challenge 3]
-
-**Evaluation Metrics**:
-- [Metric 1]
-- [Metric 2]
-- [Metric 3]
+[Central insight]
 
 ---
 
-#### 3. Solution Approach
+#### 3. Method Overview
 
-**Core Idea**: [Main idea or approach]
-
-**Technical Components**:
-
-1. **Component 1**
-   - [Description]
-   - [Key details]
-
-2. **Component 2**
-   - [Description]
-   - [Key details]
-
-**Architecture**:
-```
-[ASCII diagram or flowchart showing the approach]
-```
+[Technical description]
 
 ---
 
-#### 4. Innovation Points
+#### 4. Innovation
 
-1. **Innovation 1**
-   - [Description of what is novel]
-   - [Why it matters]
-
-2. **Innovation 2**
-   - [Description of what is novel]
-   - [Why it matters]
+1. **[Innovation 1]** — [description and significance]
+2. **[Innovation 2]** — [description and significance]
 
 ---
 
-#### 5. Experimental Results
+#### 5. Why It Works
 
-**Datasets/Benchmarks**:
-- [Dataset 1]: [Description]
-- [Dataset 2]: [Description]
+**Key bottleneck resolved**: [What limitation is overcome]
 
-**Results Comparison**:
-
-| Model | Metric 1 | Metric 2 |
-|-------|----------|----------|
-| [Baseline] | [Value] | [Value] |
-| **[This Paper]** | **[Value]** | **[Value]** |
-
-**Key Findings**:
-- [Finding 1]
-- [Finding 2]
+**Design insight**: [Why this design works]
 
 ---
 
-#### 6. Limitations
+#### 6. Experimental Evidence
 
-**Method Level**:
+**Key results**:
+- [Result 1 with numbers]
+- [Result 2 with numbers]
+
+**Evidence Quality**: [adequate / limited / none for ablation; fair / limited for baselines]
+
+---
+
+#### 7. Strengths
+
+- [Strength 1]
+- [Strength 2]
+
+---
+
+#### 8. Limitations
+
 - [Limitation 1]
-
-**Experimental Level**:
-- [Limitation 1]
-
-**Generalization Challenges**:
-- [Challenge 1]
+- [Limitation 2]
 
 ---
 
-#### 7. Research Implications
+#### 9. Position in the Field
 
-**Implications for the Field**:
-- [Implication 1]
-- [Implication 2]
+**Technical route**: [Route name]  
+**Builds on**: [Prior papers]  
+**Classification**: [Type]
 
-**Potential Improvements**:
-- [Improvement 1]
+---
 
-**Significance for the Research Field**:
-- [How this paper advances the field]
+#### 10. Research Insights
+
+- [Insight 1]
+- [Insight 2]
 
 ---
 
 ### PAPER 3: [Paper Title]
 
-**Authors**: [Author names]  
-**Year**: [Publication year]  
-**Venue**: [Journal/Conference name]  
-
-#### Paper Identifiers & Links
-
-**Identifiers**:
-- **DOI**: [DOI link]
-- **arXiv ID**: [arXiv link]
-- **Semantic Scholar ID**: [S2 link]
-
-**Access Links**:
-- 🔗 [View on arXiv]
-- 🔗 [View on Semantic Scholar]
-
-**Verification Status**:
-- ✅ Citation Count: [Number]
-- ✅ Content Level: [full_text / abstract_only / metadata_only]
+[Repeat full 10-point structure above]
 
 ---
 
-#### 1. Research Motivation
-
-**Background**: [Historical context and why this research matters]
-
-**Core Research Question**: [Main research question being addressed]
-
-**Research Gaps**: 
-- [Gap 1]
-- [Gap 2]
+*[Repeat the full 10-point structure for Papers 4 through N. Every representative paper gets the full framework. Do NOT write "repeat structure above" — expand fully for each paper.]*
 
 ---
 
-#### 2. Problem Formulation
+## 3. Cross-Paper Insights
 
-**Problem Statement**: [Precise problem statement]
+### 3.1 Common Patterns
 
-**Specific Challenges**:
-- [Challenge 1]
-- [Challenge 2]
+*[What mainstream methods in this field share — not per-paper summaries]*
 
-**Evaluation Metrics**:
-- [Metric 1]
-- [Metric 2]
+- **[Pattern 1]**: [Description] — seen in [Paper A, Paper B, Paper C]
+- **[Pattern 2]**: [Description] — seen in [Paper X, Paper Y]
+- **[Pattern 3]**: [Description] — [Papers]
 
----
+### 3.2 Bottlenecks
 
-#### 3. Solution Approach
+*[Shared unsolved problems that constrain the entire field]*
 
-**Core Idea**: [Main idea or approach]
+1. **[Bottleneck 1]**: [Description] — affects [Papers / routes]
+2. **[Bottleneck 2]**: [Description] — affects [Papers / routes]
+3. **[Bottleneck 3]**: [Description] — affects [Papers / routes]
 
-**Technical Components**:
+### 3.3 Open Questions
 
-1. **Component 1**
-   - [Description]
+*[Research problems the field has not yet seriously addressed]*
 
-2. **Component 2**
-   - [Description]
+1. **[Open Question 1]**: [Description]
+2. **[Open Question 2]**: [Description]
+3. **[Open Question 3]**: [Description]
 
----
+### 3.4 Research Evolution Analysis
 
-#### 4. Innovation Points
+#### Evolution 1: [Previous Paradigm] → [New Paradigm]
 
-1. **Innovation 1**
-   - [Description of what is novel]
-   - [Why it matters]
+**Previous Paradigm**: [What the old dominant approach was and why it was used]
 
-2. **Innovation 2**
-   - [Description of what is novel]
-   - [Why it matters]
+**New Paradigm**: [What replaced or is replacing it]
 
----
+**Why the Shift Happened**:
+- [Cause 1: e.g., performance bottleneck — CNN receptive field limited long-range dependencies]
+- [Cause 2: e.g., compute availability — attention cost became affordable at scale]
+- [Cause 3: e.g., data scale change — large pretraining datasets enabled the new approach]
 
-#### 5. Experimental Results
+**Evidence**:
+- [Author et al., Year] "[Title]" — [how this paper documents or exemplifies the shift]
+- [Author et al., Year] "[Title]" — [same]
 
-**Datasets/Benchmarks**:
-- [Dataset 1]: [Description]
-
-**Key Findings**:
-- [Finding 1]
-- [Finding 2]
+**Remaining Issues**: [What the new paradigm still fails to resolve]
 
 ---
 
-#### 6. Limitations
+#### Evolution 2: [Previous Paradigm] → [New Paradigm]
 
-**Method Level**:
-- [Limitation 1]
+**Previous Paradigm**: [Description]
 
-**Generalization Challenges**:
-- [Challenge 1]
+**New Paradigm**: [Description]
 
----
+**Why the Shift Happened**:
+- [Cause 1]
+- [Cause 2]
 
-#### 7. Research Implications
+**Evidence**:
+- [Paper 1]
+- [Paper 2]
 
-**Implications for the Field**:
-- [Implication 1]
-- [Implication 2]
-
-**Significance for the Research Field**:
-- [How this paper advances the field]
+**Remaining Issues**: [Description]
 
 ---
 
-*[Repeat the Paper N structure above for Papers 4 through N. Each paper gets the full 7-point framework. Do NOT write "repeat structure" — expand the full structure for every paper.]*
-
-## 3. Cross-Paper Synthesis & Thematic Analysis
-
-### 3.1 Research Themes
-
-**Theme 1: [Major Research Theme]**
-
-**Definition**: [What this theme encompasses]
-
-**Papers Addressing This Theme**: [Paper 1, Paper 2, ...]
-
-**Main Findings Across Papers**:
-- Finding 1: [Description]
-- Finding 2: [Description]
-- Finding 3: [Description]
-
-**Methodological Approaches**:
-- Approach 1: [Description] - [Papers using this]
-- Approach 2: [Description] - [Papers using this]
-
-**Evidence Quality**: [Assessment of evidence quality]
-
-**Research Gaps**: [Gaps within this theme]
+*[Add Evolution 3 … N as needed. 2–4 evolutions is typical for a well-developed field.]*
 
 ---
 
-**Theme 2: [Major Research Theme]**
+## 4. Critical Analysis
+
+### 4.1 Contradictions
+
+*[Papers with conflicting conclusions — cite both sides and analyze why they disagree]*
+
+- **[Contradiction 1]**: [Paper A] claims [X]; [Paper B] claims [not-X]. Likely explanation: [reason — different datasets, different evaluation protocols, different problem formulation]
+- **[Contradiction 2]**: [Description]
+
+### 4.2 Benchmark Bias
+
+*[Which datasets or evaluation setups systematically favor certain methods]*
+
+- **[Bias 1]**: [Dataset/benchmark name] favors methods that [description]. Papers using only this benchmark may overstate advantage for [approach].
+- **[Bias 2]**: [Description]
+
+### 4.3 Evaluation Issues
+
+*[Gaps between reported benchmark performance and real-world capability]*
+
+- **[Issue 1]**: [Description — e.g., benchmark X does not test Y capability which matters in deployment]
+- **[Issue 2]**: [Description]
+
+### 4.4 Scalability Issues
+
+*[Claimed advantages that may not hold at larger scale or different data distributions]*
+
+- **[Issue 1]**: [Method X claims O(n) complexity but experiments only show n ≤ Y; real-world n is Z]
+- **[Issue 2]**: [Description]
+
+### 4.5 Hype vs Evidence
+
+#### Direction: [Prominent Research Direction 1]
+
+**Popularity**: [High / Moderate — number of papers, conference tracks, industry adoption]
+
+**Evidence Strength**: [Strong / Moderate / Weak]
+- Supporting evidence: [What exists]
+- Gaps in evidence: [What is missing — no ablation, single paper, not reproduced independently]
+
+**Research Maturity**: [Emerging / Growing / Mature / Saturated]
+
+**Risk Assessment**:
+- [ ] Data contamination concern
+- [ ] Benchmark gaming (models tuned to specific metrics)
+- [ ] Engineering over-tuning (results require many tricks not in paper)
+- [ ] Reproducibility concerns (no code, complex setup)
+- Notes: [Specific concerns if any]
+
+---
+
+#### Direction: [Prominent Research Direction 2]
+
+**Popularity**: [Level]
+
+**Evidence Strength**: [Level]
+
+**Research Maturity**: [Level]
+
+**Risk Assessment**: [Notes]
+
+---
+
+## 5. Emerging Directions (2025–2026)
+
+*[Research directions gaining significant traction in 2025–2026. Provide actual papers — do not invent.]*
+
+---
+
+### Direction 1: [Trend Name]
+
+**Research Trend**: [One-line description of what this direction studies]
+
+**Why It Emerged**: [What limitation of prior work, external development (new hardware, new capability, new application), or new opportunity triggered this direction]
+
+**Representative Papers**:
+- [Author et al., 2025/2026] "[Title]" — [Venue/arXiv XXXX.XXXXX] — [Link]
+- [Author et al., 2025/2026] "[Title]" — [Venue/arXiv XXXX.XXXXX] — [Link]
+
+**Relationship to Existing Work**: [Builds on / challenges / orthogonal to which established routes from Section 1.2]
+
+**Potential Impact**: [What changes this direction could bring to the field]
+
+**Maturity Assessment**: Emerging
+
+---
+
+### Direction 2: [Trend Name]
+
+**Research Trend**: [Description]
+
+**Why It Emerged**: [Trigger]
+
+**Representative Papers**:
+- [Author et al., 2025/2026] "[Title]" — [Link]
+- [Author et al., 2025/2026] "[Title]" — [Link]
+
+**Relationship to Existing Work**: [Description]
+
+**Potential Impact**: [Description]
+
+**Maturity Assessment**: [Emerging / Growing]
+
+---
+
+### Direction 3: [Trend Name]
 
 [Repeat structure above]
 
 ---
 
-### 3.2 Methodological Synthesis
-
-**Research Designs**:
-
-| Design Type | Count | Papers |
-|-------------|-------|--------|
-| Experimental | [N] | [Paper 1, Paper 2, ...] |
-| Quasi-experimental | [N] | [Paper 1, Paper 2, ...] |
-| Observational | [N] | [Paper 1, Paper 2, ...] |
-| Case studies | [N] | [Paper 1, Paper 2, ...] |
-
-**Data Sources**:
-
-| Source Type | Count | Papers |
-|-------------|-------|--------|
-| Primary data | [N] | [Paper 1, Paper 2, ...] |
-| Secondary data | [N] | [Paper 1, Paper 2, ...] |
-| Synthetic data | [N] | [Paper 1, Paper 2, ...] |
-
-**Analysis Methods**:
-- [Method 1]: [Papers using this]
-- [Method 2]: [Papers using this]
-- [Method 3]: [Papers using this]
+*[Add Directions 4–5 as needed. Aim for 3–5 emerging directions.]*
 
 ---
 
-### 3.3 Theoretical Frameworks
+## 6. Future Directions (Evidence-Based)
 
-**Framework 1: [Framework Name]**
-
-**Definition**: [Description]
-
-**Papers Using**: [Number] papers - [Paper 1, Paper 2, ...]
-
-**Key Concepts**:
-- Concept 1: [Description]
-- Concept 2: [Description]
-- Concept 3: [Description]
-
-**Strengths**: [Strengths of this framework]
-
-**Limitations**: [Limitations]
+*[Each future direction must trace to a specific bottleneck, open question, critical finding, or emerging trend. No generic suggestions.]*
 
 ---
 
-**Framework 2: [Framework Name]**
+### Future Direction 1: [Name]
 
-[Repeat structure above]
+**Current Bottleneck**: [Specific observed limitation from Section 3.2 or 4]
 
----
+**Why Existing Methods Fail**: [Reason existing approaches cannot solve it — be specific about the mechanism of failure]
 
-## 4. Research Landscape Overview
+**Possible Future Direction**: [Specific research approach that could address the bottleneck]
 
-### 4.1 Publication Trends
-
-**By Year**:
-```
-[Chart or table showing publication count by year]
-```
-
-**By Venue**:
-```
-Top journals/conferences:
-1. [Venue] - [Number] papers
-2. [Venue] - [Number] papers
-3. [Venue] - [Number] papers
-```
-
-### 4.2 Research Paradigms
-
-**Dominant Approaches**:
-1. [Approach 1] - [Number] papers - [Description]
-2. [Approach 2] - [Number] papers - [Description]
-3. [Approach 3] - [Number] papers - [Description]
-
-**Emerging Approaches**:
-1. [Approach 1] - [Description]
-2. [Approach 2] - [Description]
+**Supporting Evidence**: [Paper(s) or finding(s) that point toward this direction]
 
 ---
 
-## 5. Research Gaps & Future Directions
+### Future Direction 2: [Name]
 
-### Major Gaps Identified
+**Current Bottleneck**: [Description]
 
-1. **Gap 1: [Description]**
-   - Why it matters: [Significance]
-   - How to address: [Suggested approach]
-   - Related papers: [Papers that hint at this gap]
+**Why Existing Methods Fail**: [Description]
 
-2. **Gap 2: [Description]**
-   - Why it matters: [Significance]
-   - How to address: [Suggested approach]
-   - Related papers: [Papers that hint at this gap]
+**Possible Future Direction**: [Description]
 
-3. **Gap 3: [Description]**
-   - Why it matters: [Significance]
-   - How to address: [Suggested approach]
-   - Related papers: [Papers that hint at this gap]
+**Supporting Evidence**: [References]
 
 ---
 
-### Recommended Future Research Directions
+### Future Direction 3: [Name]
 
-1. **Direction 1: [Description]**
-   - Rationale: [Why this is important]
-   - Suggested approach: [How to pursue this]
-   - Potential impact: [Expected outcomes]
+**Current Bottleneck**: [Description]
 
-2. **Direction 2: [Description]**
-   - Rationale: [Why this is important]
-   - Suggested approach: [How to pursue this]
-   - Potential impact: [Expected outcomes]
+**Why Existing Methods Fail**: [Description]
 
-3. **Direction 3: [Description]**
-   - Rationale: [Why this is important]
-   - Suggested approach: [How to pursue this]
-   - Potential impact: [Expected outcomes]
+**Possible Future Direction**: [Description]
+
+**Supporting Evidence**: [References]
 
 ---
 
-## 6. Conclusion
-
-### Summary of Key Findings
-
-[2-3 paragraph summary of the main findings across all papers]
-
-### Implications for Practice
-
-[How these findings can be applied in practice]
-
-### Implications for Future Research
-
-[How these findings should shape future research directions]
+*[Add Future Directions 4–5 as needed. Typically 3–6 is appropriate.]*
 
 ---
 
@@ -631,20 +578,22 @@ Top journals/conferences:
 
 ### Papers Analyzed
 
-[APA 7.0 formatted citations for all papers analyzed]
+[APA 7.0 formatted citations for all papers analyzed in this survey]
+
+Author, A., & Author, B. (Year). Title of paper. *Conference/Journal Name*, volume(issue), pages. https://doi.org/XXXXX
 
 ### Additional References
 
-[APA 7.0 formatted citations for other references mentioned]
+[APA 7.0 citations for other papers mentioned but not analyzed in full]
 
 ---
 
 ## AI Disclosure Statement
 
-This literature survey was generated with AI-assisted research tools. All claims are grounded in the source papers and related work. The analysis framework, paper selection, and synthesis were conducted using automated literature research capabilities, with human oversight of the final output.
+This literature survey was generated with AI-assisted research tools. All claims are grounded in the source papers and related work. The analysis framework, paper selection, and synthesis were conducted using automated literature research capabilities (WebSearch, WebFetch, Semantic Scholar API), with human oversight of the final output.
 
 ---
 
 **Survey Completed**: [Date]  
-**Analyst**: [Name/AI-Assisted]  
-**Methodology**: WebSearch + WebFetch + Semantic Scholar API for paper discovery and retrieval; 7-point deep analysis framework for each paper; cross-paper thematic synthesis
+**Skill Version**: academic-literature-research v3.0.0  
+**Methodology**: WebSearch + WebFetch + Semantic Scholar API for paper discovery and retrieval; research-question-centric organization; 10-point deep analysis framework per paper; Research Evolution Analysis; Critical Analysis

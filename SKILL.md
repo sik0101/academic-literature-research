@@ -2,8 +2,8 @@
 name: academic-literature-research
 description: "Deep academic literature research and paper analysis skill. Specialized for systematic literature review, paper deep-reading, and technical research in academic and technology domains. Triggers on: literature review, read paper, paper analysis, research survey, literature survey, 文献调研, 论文阅读, 论文分析, 研究综述, 技术调研. Provides comprehensive paper analysis including: research motivation, problem formulation, solution approach, innovation points, experimental validation, limitations, and research implications. Generates structured reports with APA 7.0 citations and actionable insights for follow-up research."
 metadata:
-  version: "2.0.0"
-  last_updated: "2026-06-01"
+  version: "3.1.0"
+  last_updated: "2026-06-14"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -36,7 +36,7 @@ Survey literature on transformer architectures
 1. **Clarification** — Understand user intent and research scope
 2. **Discovery** — Research Architect Agent finds papers via Semantic Scholar API + WebSearch (survey/multi-paper modes)
 3. **Retrieval** — Content Retrieval Agent fetches paper content via WebFetch
-4. **Analysis** — Apply 7-point framework to each paper's content
+4. **Analysis** — Apply 7-point framework (or 10-point for survey mode) to each paper's content
 5. **Composition** — Generate final report with APA 7.0 citations and insights
 6. **File Output** — Save analysis as markdown file to disk (NOT command line output)
 
@@ -106,7 +106,7 @@ This skill uses four specialized agents that activate based on mode. Each agent 
 |---|---|---|---|
 | **Research Architect** | Discover papers via multi-source search | WebSearch, Semantic Scholar API | survey, multi-paper |
 | **Content Retrieval** | Fetch actual paper content from URLs | WebFetch | all modes |
-| **Analysis** | Apply 7-point framework to each paper | (reasoning only) | all modes |
+| **Analysis** | Apply 7-point (or 10-point for survey) framework to each paper | (reasoning only) | all modes |
 | **Synthesis** | Cross-paper comparison and report generation | Write, Edit | multi-paper, survey |
 
 ### Research Architect Agent
@@ -270,6 +270,9 @@ Queries:
 
 **1b. Search Semantic Scholar API (primary)**
 
+**CRITICAL — Call queries ONE AT A TIME (sequentially), never in parallel.**  
+Semantic Scholar's public API enforces a per-second rate limit. Calling 3+ URLs simultaneously triggers HTTP 429 for all of them. Send one WebFetch request, wait for the result, then send the next.
+
 For each query, use **WebFetch** to call the Semantic Scholar API:
 
 ```
@@ -283,16 +286,59 @@ Example URL for query "multimodal large language model 2024":
 https://api.semanticscholar.org/graph/v1/paper/search?query=multimodal+large+language+model+2024&limit=10&fields=title,authors,year,venue,externalIds,citationCount,abstract
 ```
 
+**429 Rate-Limit Handling:**  
+If any query returns HTTP 429, **stop all remaining API calls immediately** and switch the entire discovery phase to the arXiv Direct Fallback described in Step 1c. Do NOT retry the API — the rate limit window is 1 minute and retrying wastes time. Log which queries succeeded before the 429 and carry their results forward.
+
 Collect all results across all queries. Deduplicate by title similarity (threshold: 0.85 — same paper if titles are >85% similar).
 
-**1c. WebSearch fallback (when API returns < 3 results for a query)**
+**1c. arXiv Direct Fallback (primary fallback — use when API returns 429, or < 3 results for a query)**
 
-"< 3 results" means fewer than 3 papers with non-empty abstracts after deduplication. Use WebSearch with these patterns:
-- `site:arxiv.org {query}` — finds arXiv preprints
-- `{query} paper {year1} OR {year2} site:semanticscholar.org` — finds indexed papers
-- `"{core topic}" survey OR review` — finds survey papers
+This fallback activates in two situations:
+- The Semantic Scholar API returned HTTP 429 (rate limit), OR
+- A specific query returned fewer than 3 papers with non-empty abstracts
 
-From WebSearch results, extract paper titles and URLs. For each title found, verify via Semantic Scholar API (WebFetch as above) to get full metadata.
+**Why arXiv direct fetch instead of WebSearch:**  
+WebSearch with academic queries (e.g., `site:arxiv.org multimodal large language model`) frequently returns zero results in this environment. The reliable alternative is to fetch arXiv abstract pages directly using known or inferred arXiv IDs.
+
+**arXiv Direct Fetch strategy:**
+
+*Step 1 — Use domain knowledge to infer arXiv IDs for well-known papers in the topic area.*
+
+For common research areas, landmark papers have well-known arXiv IDs. For example:
+- MLLM/LLaVA family: 2304.08485, 2310.03744 (LLaVA-1.5), 2312.14238 (InternVL)
+- Instruction tuning: 2305.06500 (InstructBLIP), 2309.05519 (NExT-GPT)
+- Benchmarks: 2307.06281 (MMBench), 2409.12191 (Qwen2-VL)
+
+For each inferred arXiv ID, fetch the abstract page:
+```
+Tool: WebFetch
+URL: https://arxiv.org/abs/{arxiv_id}
+Prompt: "Extract the paper title, authors, year, venue (if mentioned), and abstract."
+```
+
+*Step 2 — Extract "Related Work" or "References" sections from retrieved papers to discover more papers.*
+
+Once 2–3 seed papers are retrieved, their reference lists often contain the next tier of important papers. Fetch the HTML version of each seed paper and extract cited paper titles:
+```
+Tool: WebFetch
+URL: https://arxiv.org/html/{arxiv_id}
+Prompt: "List all paper titles and arXiv IDs mentioned in the references or related work section."
+```
+
+*Step 3 — Follow up on discovered paper titles by fetching their arXiv pages.*
+
+From discovered titles, infer or search for their arXiv IDs. For any paper where the arXiv ID is unknown, use:
+```
+Tool: WebFetch
+URL: https://arxiv.org/search/?query={URL-encoded title}&searchtype=all&start=0
+Prompt: "Find the arXiv ID and year for the paper titled '{title}'. Extract the first matching result's arXiv ID."
+```
+
+**Minimum viable fallback:** If no API results and arXiv fallback also fails to find enough papers, proceed with whatever papers were successfully retrieved, noting the constraint. Do not invent papers.
+
+**Legacy WebSearch patterns (secondary — try only if arXiv fallback is also unsuccessful):**
+- `site:arxiv.org "{core topic}" {year}` — may return results for specific topics
+- `"{paper title}" filetype:pdf` — sometimes finds preprint PDFs
 
 **1d. Screen and rank candidates**
 
@@ -303,8 +349,41 @@ Apply screening criteria in order:
 4. Venue quality: top-tier conference/journal > workshop > arXiv > other
 5. Citation count: ≥ 10 for survey mode (waive for papers < 1 year old, i.e., published in 2025–2026)
 
+**Paper Type Classification** (survey mode — classify each paper before selection):
+
+| Type | Definition | Target Ratio | Hard Limit |
+|------|-----------|-------------|-----------|
+| Method Paper | Proposes a new model, algorithm, or architecture | ≥ 60% | required |
+| Benchmark Paper | Establishes evaluation tasks, metrics, or competition | ≥ 20% combined (see note) | soft |
+| Dataset Paper | Introduces a new training or evaluation dataset | ≥ 20% combined (see note) | soft |
+| Analysis Paper | Empirical analysis, ablation study, or theoretical work | ≥ 10% | soft |
+| Survey Paper | Reviews existing work in a subfield | ≤ 10% | required |
+
+**Note — Benchmark/Dataset ratio is a soft target, not a hard requirement:**  
+In fast-moving fields where research is method-centric (MLLM, LLM, Agent), Benchmark and Dataset papers represent a structurally smaller share of the literature. In these fields it is acceptable for Benchmark+Dataset to be 10–15% instead of 20%+, provided that:
+1. At least 1 Benchmark or Dataset paper is included if one exists in the field
+2. The deficit is explicitly noted in the Executive Summary
+3. Method Papers make up the difference (capped at 80%)
+
+Do NOT include low-quality papers solely to hit a ratio target. Quality over quota.
+
+Survey papers may only be used for background context; they must not become core analysis subjects. Avoid selecting multiple surveys covering the same sub-topic.
+
+**Prioritization within each type:**
+- Pioneering papers that introduced a research paradigm
+- Highly-cited papers (≥ 100 citations)
+- Technical turning-point papers that shifted the dominant approach
+- Current SOTA papers
+- Most recent representative papers (2025–2026)
+
+**Time Coverage Requirement** (fast-evolving fields: LLM, Agent, MLLM, recommender systems, spatiotemporal prediction, AI4Science):
+- Papers from 2025–2026 must account for ≥ 30% of the final selection
+- Must include: latest top-conference papers, latest high-impact arXiv preprints, latest benchmark work
+- Final selection must span: classic foundational work + current mainstream work + latest cutting-edge work
+- Avoid surveys dominated only by 2018–2024 historical review
+
 Select final paper set:
-- Survey mode: 5–10 papers covering different sub-topics and time periods within the user's range
+- Survey mode: 5–10 papers covering different paper types, sub-topics, and time periods within the user's range
 - Multi-paper mode: 2–5 papers matching user's comparison focus
 
 #### Step 2 — Content Retrieval
@@ -412,11 +491,14 @@ Or type "skip" to exclude this paper from the analysis.
 
 ### Phase 3: ANALYSIS
 
-Conduct structured analysis of each paper using the 7-point framework.
+Conduct structured analysis of each paper using the appropriate framework.
 
-#### 7-Point Deep Analysis Framework
+#### Analysis Frameworks
 
-For each paper, analyze using these 7 dimensions:
+**Single Paper, Quick Brief, Multi-Paper modes** use the **7-point framework** below.  
+**Survey mode** uses the extended **10-point framework** defined in the Survey Mode section.
+
+For single/quick-brief/multi-paper modes, analyze using these 7 dimensions:
 
 ##### 1. Research Motivation (为什么提出)
 
@@ -599,18 +681,131 @@ For each paper, analyze using these 7 dimensions:
 3. Create thematic analysis sections
 
 **Survey Mode:**
-1. Apply 7-point framework to each paper with these survey-specific adjustments:
-   - **Omit** the "Connection to Your Research" sub-section from §7 (Research Implications) — replace with "Significance for the Research Field" instead
-   - For `abstract_only` papers: mark §3 and §5 as limited; still complete §1, §2, §4, §6, §7 from abstract
-2. Conduct comprehensive cross-paper synthesis:
-   - Synthesize findings across all papers
-   - Identify research trends and patterns
-   - Map research landscape
-   - Highlight emerging directions
-3. Create thematic analysis sections
-4. Analyze methodological approaches
-5. Identify major research gaps
-6. Recommend future research directions
+
+Survey mode is **research-question-centric**, not paper-centric. Research problems are the backbone; papers are evidence. Do not organize the output as "Paper A, Paper B, Paper C" — organize it around what the field is trying to solve.
+
+**Step A: Identify Core Research Problems**
+
+Before any per-paper analysis, identify 3–6 core problems the field is working on. Examples:
+- Spatiotemporal forecasting: modeling spatial dependencies / temporal dependencies / dynamic graph structure / cross-city generalization
+- MLLM: visual alignment / visual instruction tuning / visual reasoning / Agent capability
+- Recommender systems: cold start / long-term interest modeling / generalization
+
+**Step B: Build Research Landscape**
+
+For each core research problem, identify the technical routes used to address it. For each route, document:
+- **Research Question**: what specific problem this route addresses
+- **Motivation**: why this route matters and why other routes were insufficient
+- **Main Approaches**: categories of methods within this route (e.g., GNN-based, Transformer-based, hybrid)
+- **Representative Papers**: at minimum Title, Authors, Year, Venue, Link for each — at least 2–3 papers per route
+- **Strengths**: what problems this route successfully addresses
+- **Limitations**: unsolved problems that remain within this route
+- **Relationship to Other Directions**: complementary routes, competing routes, hierarchical relationships
+
+**Step C: Apply 10-Point Framework to Representative Papers**
+
+For the most important/representative papers (typically 5–8), apply the full 10-point framework. Other papers may appear in the Research Landscape with briefer mentions.
+
+10-point analysis framework:
+
+1. **Research Problem** — what specific problem does this paper address (1–2 sentences)
+2. **Core Idea** — the central conceptual insight (not just "we propose X", but WHY X was the right approach to the problem)
+3. **Method Overview** — technical description of key components and architecture
+4. **Innovation** — what is genuinely novel compared to prior work; compare explicitly with direct predecessors
+5. **Why It Works** — design rationale analysis (REQUIRED; do not merely describe modules):
+   - Why is this design better than the previous approach?
+   - What key bottleneck or contradiction does it resolve?
+   - What insight makes the performance improvement possible?
+6. **Experimental Evidence** — critical evaluation of support for claims:
+   - Datasets and baselines used
+   - Key quantitative results
+   - Are experiments adequate? (sufficient ablation, fair baselines, reproducibility)
+7. **Strengths** — what this paper contributes well
+8. **Limitations** — method-level, experimental, and generalization limitations
+9. **Position in the Field** — lineage mapping:
+   - Which technical route this paper belongs to
+   - Which prior works it builds on (name specific papers)
+   - Which subsequent works it influenced (name specific papers if known)
+   - Classification: Pioneering Work / Refinement Work / Turning-Point Work / Extension Work
+10. **Research Insights** — what this paper reveals for future research
+
+Content-level adaptation for 10-point framework:
+- `full_text`: complete all 10 points
+- `abstract_only`: mark §3, §5, §6 as limited; complete §1, §2, §4, §7, §8, §9, §10 from abstract
+- `metadata_only`: note briefly; do not fabricate
+
+**Step D: Cross-Paper Insights**
+
+Extract field-level patterns from the paper set. Do NOT repeat per-paper summaries.
+
+**Common Patterns**: what mainstream methods in this field share (data representations, training strategies, evaluation protocols)
+
+**Bottlenecks**: shared unsolved problems that constrain the entire field
+
+**Open Questions**: research problems the field has not yet seriously addressed
+
+**Research Evolution Analysis**: for each major paradigm shift (2–4 total), analyze:
+- **Previous Paradigm**: what the old dominant approach was
+- **New Paradigm**: what replaced or is replacing it
+- **Why the Shift Happened**: analyze at least one cause: performance bottleneck, scalability issue, data scale change, compute improvement, hardware environment change, benchmark change, application requirement change
+- **Evidence**: cite 2–3 representative papers that document or exemplify the shift
+- **Remaining Issues**: what the new paradigm still fails to resolve
+
+Example format:
+```
+Previous Paradigm: CNN with locality inductive bias
+New Paradigm: Vision Transformer with global self-attention
+
+Why the shift happened:
+- CNN receptive field limited long-range dependency modeling
+- Self-attention enables full-sequence global context at acceptable cost
+- Large-scale pretraining data (ImageNet-21K) became available
+Evidence: Dosovitskiy et al. (ViT, ICLR 2021), Liu et al. (Swin, ICCV 2021)
+Remaining issues: High compute cost, requires large pretraining data
+```
+
+**Step E: Critical Analysis**
+
+Critically evaluate the field. Do not default to treating all papers as valid.
+
+**Contradictions**: cite papers with conflicting conclusions and analyze why they disagree
+
+**Benchmark Bias**: which datasets or evaluation setups systematically favor certain methods
+
+**Evaluation Issues**: gaps between reported benchmark performance and real-world capability
+
+**Scalability Issues**: which claimed advantages disappear at larger scale or different data distributions
+
+**Hype vs Evidence**: for 2–3 prominent directions, assess:
+- **Popularity**: how much attention this direction receives
+- **Evidence Strength**: Strong (extensive ablation, multiple venues, reproduced) / Moderate / Weak (single paper, no ablation, unreproduced)
+- **Research Maturity**: Emerging / Growing / Mature / Saturated
+- **Risk Assessment**: flag any: data contamination, benchmark gaming, engineering over-tuning, reproducibility concerns
+
+**Step F: Emerging Directions (2025–2026)**
+
+Identify 3–5 research directions gaining significant traction in 2025–2026. For each:
+- **Research Trend**: name and one-line description
+- **Why It Emerged**: what limitation or new opportunity triggered this direction
+- **Representative Papers**: must provide Title, Authors, Year, Venue/arXiv, Link — use actual papers, do not invent
+- **Relationship to Existing Work**: builds on / challenges / orthogonal to which established routes
+- **Potential Impact**: what changes this direction could bring
+- **Maturity Assessment**: Emerging / Growing / Mature
+
+**Step G: Evidence-Based Future Directions**
+
+Derive future directions from evidence; do not invent generic suggestions. Each direction must trace to a specific bottleneck, open question, critical finding, or emerging trend.
+
+Required format for each future direction:
+```
+Current Bottleneck: [specific observed limitation]
+↓
+Why Existing Methods Fail: [reason existing approaches cannot solve it]
+↓
+Possible Future Direction: [specific research approach]
+```
+
+**Prohibited** unless backed by specific evidence: "improve performance", "improve efficiency", "improve generalization", "scale to larger models"
 
 ---
 
@@ -637,48 +832,69 @@ For survey mode, use the following structure:
    - Scope, papers analyzed, time period, date
 
 2. Executive Summary
-   - 2-3 paragraph overview of findings
+   - 2-3 paragraphs: research landscape overview, key findings, major gaps
 
-3. Introduction & Scope
-   - Research area definition
-   - Survey rationale
-   - Survey methodology
+3. Research Landscape
+   - 3.1 Core Research Problems (the 3-6 key problems the field addresses)
+   - 3.2 Technical Routes (one subsection per route):
+     - Route N: [Route Name]
+       - Research Question
+       - Motivation
+       - Main Approaches
+       - Representative Papers (Title, Authors, Year, Venue, Link)
+       - Strengths
+       - Limitations
+       - Relationship to Other Directions
 
-4. Key Papers Analysis (7-point framework for each paper)
+4. Representative Papers (10-point framework for each core paper)
    - PAPER 1: [Title]
      - Paper Identifiers & Links
-     - 1. Research Motivation
-     - 2. Problem Formulation
-     - 3. Solution Approach
-     - 4. Innovation Points
-     - 5. Experimental Results
-     - 6. Limitations
-     - 7. Research Implications
-   - PAPER 2: [Title]
-     - [Same 7-point structure]
-   - PAPER 3: [Title]
-     - [Same 7-point structure]
+     - 1. Research Problem
+     - 2. Core Idea
+     - 3. Method Overview
+     - 4. Innovation
+     - 5. Why It Works
+     - 6. Experimental Evidence
+     - 7. Strengths
+     - 8. Limitations
+     - 9. Position in the Field
+     - 10. Research Insights
+   - PAPER 2 … PAPER N: [Same 10-point structure]
 
-5. Cross-Paper Synthesis & Thematic Analysis
-   - Research themes
-   - Methodological synthesis
-   - Theoretical frameworks
+5. Cross-Paper Insights
+   - 5.1 Common Patterns
+   - 5.2 Bottlenecks
+   - 5.3 Open Questions
+   - 5.4 Research Evolution Analysis
+     - Evolution N: [Previous Paradigm → New Paradigm]
+       - Previous Paradigm
+       - New Paradigm
+       - Why the Shift Happened
+       - Evidence
+       - Remaining Issues
 
-6. Research Landscape Overview
-   - Publication trends
-   - Research paradigms
+6. Critical Analysis
+   - 6.1 Contradictions
+   - 6.2 Benchmark Bias
+   - 6.3 Evaluation Issues
+   - 6.4 Scalability Issues
+   - 6.5 Hype vs Evidence
+     - Direction: [Name]
+       - Popularity / Evidence Strength / Research Maturity / Risk Assessment
 
-7. Research Gaps & Future Directions
-   - Major gaps identified
-   - Recommended future research directions
+7. Emerging Directions (2025–2026)
+   - Direction N: [Trend Name]
+     - Why It Emerged
+     - Representative Papers (with links)
+     - Relationship to Existing Work
+     - Potential Impact
+     - Maturity Assessment
 
-8. Conclusion
-   - Summary of key findings
-   - Implications for practice
-   - Implications for future research
+8. Future Directions (Evidence-Based)
+   - Direction N: [Name]
+     - Current Bottleneck → Why Existing Methods Fail → Possible Future Direction
 
-9. References
-   - APA 7.0 formatted citations
+9. References (APA 7.0)
 
 10. AI Disclosure Statement
 ```
@@ -836,8 +1052,9 @@ After file generation, provide:
 
 📄 File: MLLM_LVLM_survey.md
 📊 Papers analyzed: 8
-📋 Sections: Executive Summary, 8× Paper Analysis (7-point), Cross-Paper Synthesis,
-             Research Landscape, Gaps & Future Directions, Conclusion, References
+📋 Sections: Executive Summary, Research Landscape (Technical Routes), 8× Paper Analysis (10-point),
+             Cross-Paper Insights (Evolution Analysis), Critical Analysis, Emerging Directions,
+             Future Directions (Evidence-Based), References
 🔗 Saved to: [full path]
 ```
 
@@ -857,8 +1074,8 @@ After file generation, provide:
 | Quick Brief | 1 | ~60 | 1 | 0 |
 | Single Paper | 1 | ~150 | 1 | 2 |
 | Multi-Paper | 3 | ~270 | 1 | 5 |
-| Survey | 8 | ~500 | 1 | 9 |
-| Large Survey | 10 | ~650 | 1 | 12 |
+| Survey | 8 | ~800 | 1 | 15 |
+| Large Survey | 10 | ~1000 | 1 | 19 |
 
 ---
 
@@ -887,6 +1104,14 @@ These standards apply to all outputs:
 | 5 | **Unsupported claims** | Making assertions without evidence | Every claim must reference the paper or related work |
 | 6 | **Shallow experimental analysis** | Only reporting numbers without interpretation | Analyze why results improved and what they mean |
 | 7 | **Missing context** | Not explaining why the problem matters | Always include research motivation and significance |
+| 8 | **Paper-centric organization** | Organizing survey as "Paper A, Paper B, Paper C" | Organize around core research questions; papers serve as evidence |
+| 9 | **Missing Research Landscape** | No technical route overview before per-paper analysis | Build Research Landscape first: core problems → technical routes → representative papers |
+| 10 | **Module description instead of design rationale** | §5 "Why It Works" just lists modules | Analyze WHY the design resolves a specific bottleneck; explain the key insight enabling the improvement |
+| 11 | **Missing evolution analysis** | States "GNN → Transformer" without explaining why | For each paradigm shift, analyze cause: performance bottleneck, scale change, compute shift, etc. |
+| 12 | **Uncritical acceptance of all papers** | Treats all reported results as valid | Apply Critical Analysis: flag contradictions, benchmark bias, hype vs evidence |
+| 13 | **Time-blind survey** | Survey dominated by 2018–2022 papers for a fast-moving field | For fast-evolving fields, ≥ 30% from 2025–2026; include latest top-conference + arXiv work |
+| 14 | **Survey-heavy paper selection** | > 10% surveys as core analysis objects | Surveys ≤ 10%; prioritize Method Papers ≥ 60%; surveys for background only |
+| 15 | **Generic future directions** | "Improve performance", "improve efficiency" | Derive each direction from: Bottleneck → Why Methods Fail → Specific Future Direction |
 
 ---
 
@@ -950,21 +1175,25 @@ Citation count: N/A
 Error 429: Too Many Requests
 ```
 
-**Causes:**
-- Too many requests in short time
-- Semantic Scholar API rate limit
+**Root cause:** Semantic Scholar's public API has a strict per-second rate limit. Sending multiple queries concurrently (as parallel tool calls) almost always triggers 429 for all of them simultaneously.
 
-**Solutions:**
-1. Wait 2-5 seconds and retry
+**Immediate action — switch to arXiv Direct Fallback:**
 
-2. Get Semantic Scholar API key
-   - Visit: https://www.semanticscholar.org/product/api
-   - Register account and get API key
-   - Rate limit increases 10x
+1. **Stop all pending API queries** — do not retry the same URLs
+2. **Switch to Step 1c arXiv Direct Fallback** immediately:
+   - Use domain knowledge to list landmark arXiv IDs for the topic
+   - Fetch each via `https://arxiv.org/abs/{arxiv_id}` **one at a time**
+   - Extract references from HTML pages to discover additional papers
+3. **Carry forward any results** already received before the 429 hit
 
-3. Use caching
-   - Avoid duplicate queries
-   - System auto-caches results
+**Prevention (apply before starting any survey):**
+- Always call Semantic Scholar API queries **sequentially** (one at a time), never in parallel
+- The extra latency per query (~2–5s) is acceptable; a full 429 failure wastes far more time
+
+**Optional — Get a Semantic Scholar API key** (increases rate limit 10×):
+- Visit: https://www.semanticscholar.org/product/api
+- Register and obtain an API key
+- Pass as HTTP header: `x-api-key: {key}` — note this requires WebFetch to support custom headers (environment-dependent)
 
 ### Issue: "Manual input mode"
 
@@ -1024,7 +1253,7 @@ Use appropriate template for each mode:
 |---------|-------------|
 | `examples/single_paper_analysis.md` | Deep analysis of one paper |
 | `examples/multi_paper_synthesis.md` | Comparative analysis of multiple papers |
-| `examples/literature_survey.md` | Comprehensive literature survey |
+| `examples/survey_report.md` | Comprehensive literature survey |
 | `examples/quick_brief.md` | Quick paper overview |
 
 ---
@@ -1051,8 +1280,8 @@ academic-literature-research  →  academic-paper-reviewer (analyze papers → p
 
 | Item | Content |
 |------|---------|
-| Skill Version | 2.0.0 |
-| Last Updated | 2026-06-01 |
+| Skill Version | 3.1.0 |
+| Last Updated | 2026-06-14 |
 | Status | Active — self-sufficient (WebSearch + WebFetch + Semantic Scholar API) |
 | Web-Access Integration | ✅ Built-in (WebSearch + WebFetch used directly) |
 | Template Support | ✅ Enabled |
